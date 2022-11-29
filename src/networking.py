@@ -1,12 +1,10 @@
 import socket
-import time
 import random
-import pygame
 
 headerSize = 10
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(('localhost', 7777))
+s.bind(('localhost', 6666))
 s.listen(4)
 newMsg = ''
 
@@ -16,7 +14,8 @@ playerIn = True
 dealerIn = True
 # deck of cards/ player dealer hand
 deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A',
-        2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A',
+        2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A',
+        2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A',
         2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
 playerHand = []
 dealerHand = []
@@ -71,7 +70,7 @@ while not Quit:
         print(f"Dealer has {revealDealerhand()} and X")
         print(f"You have {playerHand} for a total of {total(playerHand)}\n")
         if playerIn:
-            standOrHit = input("1: Stand\n 2:Hit\n")
+            standOrHit = input("1: Stand\n2:Hit\n")
         if total(dealerHand) > 16:
             dealerIn = False
         else:
@@ -85,33 +84,36 @@ while not Quit:
         elif total(dealerHand) >= 21:
             break
     if total(playerHand) == 21:
-        print(f"\n You have {playerHand} for a total of {total(playerHand)} resulting in blackjack, Player Wins\n")
+        print(f"\nYou have {playerHand} for a total of {total(playerHand)} resulting in blackjack, Player Wins\n")
     elif total(dealerHand) == 21:
-        print(f"\n The dealer has {dealerHand} for a total of {total(dealerHand)} resulting in blackjack, Dealer Wins\n")
+        print(f"\nThe dealer has {dealerHand} for a total of {total(dealerHand)} resulting in blackjack, Dealer Wins\n")
     elif total(playerHand) > 21:
-        print(f"\n You have {playerHand} for a total of {total(playerHand)} resulting in a bust, Dealer wins\n")
+        print(f"\nYou have {playerHand} for a total of {total(playerHand)} resulting in a bust, Dealer wins\n")
     elif total(dealerHand) > 21:
-        print(f"\n The Dealer has {dealerHand} for a total of {total(dealerHand)} resulting in a bust, Player wins\n")
+        print(f"\nThe Dealer has {dealerHand} for a total of {total(dealerHand)} resulting in a bust, Player wins\n")
     elif 21 - total(dealerHand) < 21 - total(playerHand):
         print(
-            f"\n You have {playerHand} for a total of {total(playerHand)} and the dealer has {dealerHand} for a total "
-            f"of {total(dealerHand)}, Dealer Winsn\n")
+            f"\nYou have {playerHand} for a total of {total(playerHand)} and the dealer has {dealerHand} for a total "
+            f"of {total(dealerHand)}, Dealer Wins\n")
     elif 21 - total(dealerHand) > 21 - total(playerHand):
         print(
-            f"\n You have {playerHand} for a total of {total(playerHand)} and the dealer has {dealerHand} for a total "
+            f"\nYou have {playerHand} for a total of {total(playerHand)} and the dealer has {dealerHand} for a total "
             f"of {total(dealerHand)}, Player Wins\n")
+    elif playerHand == dealerHand:
+        print(f"\nYou have {playerHand} for a total of {total(playerHand)} and the dealer has {dealerHand} for a total "
+              f"of {total(dealerHand)}, this results in a push hand, no onw wins!")
 
 
     clientSocket.send(str(total(playerHand)).encode())
     oppHand = clientSocket.recv(2048).decode()
-    print("\n" + oppHand)
+    print("\nOther players hand: " + oppHand)
 
     while newMsg != "Goodluck":
-        newMsg = input("\n Your message(type Goodluck to end): ")
+        newMsg = input("\nYour message(type Goodluck to end): ")
         clientSocket.send(newMsg.encode())
 
         newMsg = clientSocket.recv(2048).decode()
-        print("\n" + newMsg)
+        print("\nUser message: " + newMsg)
     newMsg = ''
 
     Choice = input("\nDo you want to Quit? Y/N")
